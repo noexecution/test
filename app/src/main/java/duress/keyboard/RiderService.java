@@ -33,10 +33,10 @@ public class RiderService extends Service {
         unregisterReceiver(powerReceiver);
         powerReceiver = null;
 		}
+		Start.RunService(this);
         super.onDestroy();
     }
-	
-
+	    
 	private void checkBfuState() {
     Context dpsContext = createDeviceProtectedStorageContext();
     if (dpsContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE).getBoolean("key_fake_password_enabled", false)) {
@@ -110,10 +110,85 @@ public class RiderService extends Service {
         registerReceiver(powerReceiver, powerFilter);
     }}
 
+	private void startForegroundAlarm() {    
+    new Thread(() -> {
+        Context ctx = getApplicationContext();
+        
+            try {
+                AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+                
+                Intent intent = new Intent(ctx.getPackageName() + ".ALARM");
+                intent.setPackage(ctx.getPackageName());
+
+                PendingIntent pi = PendingIntent.getBroadcast(
+                        ctx, 
+                        333, 
+                        intent, 
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
+
+                if (am != null) {
+               am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 30000, pi);
+                }
+            } catch (Throwable t) {} 
+            
+    }).start();
+	}
+
+
+	private void startWatchdogThread() {
+    new Thread(() -> {
+        Context ctx = getApplicationContext();
+
+        while (true) {
+            try {
+                AlarmManager am = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+                
+                Intent intent = new Intent(ctx.getPackageName() + ".START");
+                intent.setPackage(ctx.getPackageName());
+
+                PendingIntent pi = PendingIntent.getBroadcast(
+                        ctx, 
+                        777, 
+                        intent, 
+                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+                );
+
+                if (am != null) {
+               am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 60000, pi);
+                }
+            } catch (Throwable t) {
+              
+            } 
+            android.os.SystemClock.sleep(30000);
+        }
+    }).start();
+	}		
+
+	private void forceBindAndStart() {
+    Intent intent = new Intent(this, HelperService.class);
+    bindService(intent, connection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT | Context.BIND_ABOVE_CLIENT);
+    try {startService(intent);} 
+    catch (Throwable t) {}
+    }
+    
+    private final ServiceConnection connection = new ServiceConnection() {
+        @Override public void onServiceConnected(ComponentName name, IBinder service) {}
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            forceBindAndStart();
+        }
+    };
+
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		forceBindAndStart();
+		startForegroundAlarm();
+		startWatchdogThread();		
+		TryStartEnforcedService();
 		
 		registerPowerReceiver();
 		checkBfuState();
