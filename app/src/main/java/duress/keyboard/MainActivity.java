@@ -815,7 +815,7 @@ public class MainActivity extends Activity {
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(isRussianDevice ? "Выберите языки сервиса клавиатуры" : "Select keyboard service languages")
+		builder.setTitle(isRussianDevice ? "Выберите языки клавиатуры" : "Select keyboard languages")
 			.setMultiChoiceItems(languages, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -834,7 +834,7 @@ public class MainActivity extends Activity {
 
 
 					Toast.makeText(MainActivity.this,
-								   isRussianDevice ? "Языки сервиса клавиатуры сохранены" : "Keyboard service languages saved",
+								   isRussianDevice ? "Языки клавиатуры сохранены" : "Keyboard languages saved",
 								   Toast.LENGTH_SHORT).show();
 
 
@@ -1270,7 +1270,7 @@ public class MainActivity extends Activity {
 
 
 		final Button keyboardSettingsButton = new Button(this);
-		keyboardSettingsButton.setText(isRussianDevice ? "Открыть настройки клавиатур чтобы включить эту и отключить остальные." : "Open keyboard settings to enable this and disable all others.");
+		keyboardSettingsButton.setText(isRussianDevice ? "Открыть настройки клавиатур чтобы включить эту и отключить остальные." : "Open keyboard settings to enable this and disable others."); //all others, - user can understand this.
 		keyboardSettingsButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
