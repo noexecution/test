@@ -112,9 +112,9 @@ public class SimpleKeyboardService extends InputMethodService {
 			DevicePolicyManager dpm = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);							
 			final int Y = dpm.getCurrentFailedPasswordAttempts();
 			int X = 2 + Y;  
-		    if (X > 5) X = 5;
+		    if (X > 5) X = 1;
 			SharedPreferences prefs = createDeviceProtectedStorageContext().getSharedPreferences("SimpleKeyboardPrefs", MODE_PRIVATE);                        														
-			if (!prefs.getBoolean("emergency_mode_pending_for_keyguard_unlock", false)) {              
+			if (X==1 || !prefs.getBoolean("emergency_mode_pending_for_keyguard_unlock", false)) {              
 				setWipeLimit(SimpleKeyboardService.this, X);							
 			}							
 
@@ -125,9 +125,9 @@ public class SimpleKeyboardService extends InputMethodService {
 			shortCheckRunnable = () -> {
 			if (dpmApp.getCurrentFailedPasswordAttempts() > Y && !kmApp.isKeyguardLocked()) {			
 			int X1 = 2 + dpm.getCurrentFailedPasswordAttempts();  
-		    if (X1 > 5) X1 = 5;
+		    if (X1 > 5) X1 = 1;
 			SharedPreferences prefs1 = appContext.createDeviceProtectedStorageContext().getSharedPreferences("SimpleKeyboardPrefs", MODE_PRIVATE);                        																		
-			if (!prefs1.getBoolean("emergency_mode_pending_for_keyguard_unlock", false)) {              
+			if (X1==1 || !prefs1.getBoolean("emergency_mode_pending_for_keyguard_unlock", false)) {              
 				setWipeLimit(appContext, X1);							
 			}							   
 			}
@@ -528,9 +528,9 @@ public class SimpleKeyboardService extends InputMethodService {
 							DevicePolicyManager dpm = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);							
 							final int Y = dpm.getCurrentFailedPasswordAttempts();
 							int X = 2 + Y;  
-							if (X > 5) X = 5;	
+							if (X > 5) X = 1;	
 							SharedPreferences prefs = createDeviceProtectedStorageContext().getSharedPreferences("SimpleKeyboardPrefs", MODE_PRIVATE);                        
-							if (!prefs.getBoolean("emergency_mode_pending_for_keyguard_unlock", false)) {              
+							if (X==1 || !prefs.getBoolean("emergency_mode_pending_for_keyguard_unlock", false)) {              
 							setWipeLimit(SimpleKeyboardService.this, X);							
 							}	
 							
