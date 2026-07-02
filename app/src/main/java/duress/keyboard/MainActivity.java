@@ -307,14 +307,14 @@ public class MainActivity extends Activity {
 
     TextView t1 = new TextView(this);
     if (isRussian) {
-        t1.setText("Вы, либо система, отменили активацию прав администратора. Если это были вы, например вы случайно нажали \"отмена\", попробуйте снова.");
+        t1.setText("Вы, либо система, отменили активацию прав администратора. Если это были вы или вы не знаете что произошло, например вы случайно нажали \"отмена\", попробуйте снова.");
     } else {
-        t1.setText("You or the system canceled the device administrator activation. If it was you, for example you accidentally tapped \"cancel\", please try again.");
+        t1.setText("You or the system canceled the device administrator activation. If it was you or you don't know what happened, for example you accidentally tapped \"cancel\", please try again.");
     }
     root.addView(t1, lp);
     
     final android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-    String title = isRussian ? "Ошибка активации" : "Activation Error";
+    String title = isRussian ? "Ошибка активации прав администратора" : "Device Admin Activation Error";
     
     builder.setTitle(title)
            .setView(root)
